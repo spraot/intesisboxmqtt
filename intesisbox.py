@@ -234,9 +234,9 @@ class IntesisBox(asyncio.Protocol):
                 payload = json.loads(payload_str)
 
             if 'state' in payload:
-                if payload['state'] == POWER_ON:
+                if payload['state'].upper() == POWER_ON:
                     self.set_power_on()
-                elif payload['state'] == POWER_OFF:
+                elif payload['state'].upper() == POWER_OFF:
                     self.set_power_off()
                     return
                 else:
