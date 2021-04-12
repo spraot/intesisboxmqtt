@@ -1,0 +1,10 @@
+version: '3.6'
+services:
+  intesisboxmqtt:
+    build: 
+      context: .
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./config.yml:/config.yml
+

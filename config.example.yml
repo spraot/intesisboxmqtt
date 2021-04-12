@@ -1,0 +1,7 @@
+topic_prefix: pi/io
+mqtt_server_ip: localhost
+mqtt_server_port: 1883
+mqtt_server_user: mqtt
+mqtt_server_password: 123abc
+intesisbox_ip: 192.168.1.208
+intesisbox_port: 3310
