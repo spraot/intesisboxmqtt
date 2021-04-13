@@ -240,34 +240,34 @@ class IntesisBox(asyncio.Protocol):
                     self.set_power_off()
                     return
                 else:
-                    _LOGGER.error('Invalid state {}'.format(payload['state']))
+                    _LOGGER.error('Invalid state: {}'.format(payload['state']))
 
             if 'mode' in payload:
                 mode = MODE_DRY if payload['mode'].lower() == MODE_DRY_HA else payload['mode'].upper()
                 if mode in self.operation_list:
                     self.set_mode(mode)
                 else:
-                    _LOGGER.error('Unsupported mode {}'.format(payload['mode']))
+                    _LOGGER.error('Unsupported mode: {}'.format(payload['mode']))
 
             if 'temperature' in payload:
                 try:
                     self.set_temperature(float(payload['temperature']))
                 except ValueError:
-                    _LOGGER.error('Invalid temperature {}'.format(payload['temperature']))
+                    _LOGGER.error('Invalid temperature: {}'.format(payload['temperature']))
 
             if 'vane_horizontal' in payload:
                 mode = payload['vane_horizontal'].upper()
                 if mode in self._horizontal_vane_list:
                     self.set_horizontal_vane(mode)
                 else:
-                    _LOGGER.error('Unsupported value for vane_horizontal {}'.format(payload['vane_horizontal']))
+                    _LOGGER.error('Unsupported value for vane_horizontal: {}'.format(payload['vane_horizontal']))
 
             if 'vane_vertical' in payload:
                 mode = payload['vane_vertical'].upper()
                 if mode in self._vertical_vane_list:
                     self.set_vertical_vane(mode)
                 else:
-                    _LOGGER.error('Unsupported value for vane_vertical {}'.format(payload['vane_vertical']))
+                    _LOGGER.error('Unsupported value for vane_vertical: {}'.format(payload['vane_vertical']))
 
             if 'fan_speed' in payload:
                 mode = payload['fan_speed'].upper()
@@ -283,7 +283,7 @@ class IntesisBox(asyncio.Protocol):
                 elif mode == 'HIGH':
                     self.set_fan_speed(fan_speeds_numeric[-1])
                 else:
-                    _LOGGER.error('Unsupported value for fan_speed {}'.format(payload['fan_speed']))
+                    _LOGGER.error('Unsupported value for fan_speed: {}'.format(payload['fan_speed']))
         except Exception as e:
             logging.error('Encountered error: '+str(e))
 
