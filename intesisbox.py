@@ -406,13 +406,14 @@ class IntesisBox(asyncio.Protocol):
 
             self.mqttclient.publish(self.availability_topic, payload="online" if self.is_connected else "offline", qos=0, retain=True)
             
-    async def connection_lost(self, exc):
+    def connection_lost(self, exc):
         """asyncio callback for a lost TCP connection"""
         self._connectionStatus = API_DISCONNECTED
         _LOGGER.info('The server closed the connection')
         self.update_status()
 
-        await asyncio.sleep(30)
+        time.sleep(30)
+        _LOGGER.info('Attempting to reconnect...')
         self.connect_to_intesisbox()
 
     def connect_to_intesisbox(self):
