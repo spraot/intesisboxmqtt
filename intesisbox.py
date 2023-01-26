@@ -136,7 +136,7 @@ class IntesisBox(asyncio.Protocol):
             'temp_step': 0.1,
             'initial': 22.5,
             "availability": [
-                {'topic': self.availability_topic},
+                {'topic': self.availability_topic, 'value_template': '{{ value_jason.state }}'},
             ],
             "device": {
                 "identifiers": [self.unique_id],
@@ -187,8 +187,6 @@ class IntesisBox(asyncio.Protocol):
     def programend(self):
         logging.info("stopping")
 
-        self.mqttclient.publish(self.availability_topic, payload="offline", qos=0, retain=True)
-
         self.mqttclient.disconnect()
         time.sleep(0.5)
         logging.info("stopped")
@@ -212,8 +210,10 @@ class IntesisBox(asyncio.Protocol):
         self.mqttclient.subscribe(self.mqtt_mode_command_topic)
         self.mqttclient.subscribe(self.mqtt_temp_command_topic)
         self.mqttclient.subscribe(self.mqtt_command_topic)
-
+                
         self.update_status()
+
+        self.mqttclient.will_set(self.availability_topic, payload='{"state": "offline"}', qos=1, retain=True)
 
     def mqtt_on_message(self, client, userdata, msg):
         try:
@@ -399,12 +399,12 @@ class IntesisBox(asyncio.Protocol):
                 self.update_status()
             
     def update_status(self):
-        if self.is_connected and self.mqttclient.is_connected:
+        if self.mqttclient.is_connected:
             if self.is_connected:
                 #Configure MQTT for Home Assistant
                 self.configure_mqtt()
 
-            self.mqttclient.publish(self.availability_topic, payload="online" if self.is_connected else "offline", qos=0, retain=True)
+            self.mqttclient.publish(self.availability_topic, payload='{"state": "{}"}'.format("online" if self.is_connected else "offline"), qos=1, retain=True)
             
     def connection_lost(self, exc):
         """asyncio callback for a lost TCP connection"""
