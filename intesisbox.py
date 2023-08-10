@@ -404,7 +404,8 @@ class IntesisBox(asyncio.Protocol):
                 #Configure MQTT for Home Assistant
                 self.configure_mqtt()
 
-            self.mqttclient.publish(self.availability_topic, payload='{"state": "{}"}'.format("online" if self.is_connected else "offline"), qos=1, retain=True)
+            payload={'state': 'online' if self.is_connected else 'offline'}
+            self.mqttclient.publish(self.availability_topic, payload=json.dumps(payload), qos=1, retain=True)
             
     def connection_lost(self, exc):
         """asyncio callback for a lost TCP connection"""
